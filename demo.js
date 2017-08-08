@@ -27,7 +27,7 @@ var iconObject = L.icon({
 
 var map = createMap("map");
 // a bit inconsistent: latitude,longitude here but in GeoJSON it is lon,lat:
-map.setView([39.8, -105], 11);
+map.setView([52.528963, 13.396454], 11);
 
 var routingLayer = L.geoJson().addTo(map);
 routingLayer.options = {
