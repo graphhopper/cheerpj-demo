@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CheerpJ - GraphHopper</title>
+    <script src="http://cheerpjunstable.leaningtech.com/loader.js"></script>
+  </head>
+  <body>
+    <form>
+      <input type="text" value="52.528963" id="value1"></input>
+      <input type="text" value="13.396454" id="value2"></input>
+      <input type="text" value="52.507863" id="value3"></input>
+      <input type="text" value="13.496704" id="value4"></input>
+      <input type="button" value="runRequest" disabled="true" id="ghbutton"></input>
+    </form>
+    <pre id="console"></pre>
+  </body>
+    <script>
+	var ghButton = document.getElementById("ghbutton");
+        function runGHRequest()
+	{
+		ghButton.disabled = true;
+		var val1 = +document.getElementById("value1").value;
+		var val2 = +document.getElementById("value2").value;
+		var val3 = +document.getElementById("value3").value;
+		var val4 = +document.getElementById("value4").value;
+		cjCall("Main", "runRequest", "/app/cache", val1, val2, val3, val4).then(function() { ghButton.disabled = false; });
+	}
+	cheerpjInit()
+	ghButton.addEventListener("click", runGHRequest);
+	cheerpjRunMain("Main","/app/GH.jar:/app/graphhopper-tools-TRIMMED-0.10-SNAPSHOT-jar-with-dependencies.jar").then(function() { ghButton.disabled = false; });; 
+    </script>
+</html>
