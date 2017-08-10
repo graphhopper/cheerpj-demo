@@ -36,15 +36,18 @@ routingLayer.options = {
 
 var queryPoints = [];
 
-map.on('click', function (e) {
+function messageStatus(msg) {
+    document.getElementById("messages").innerText = msg;
+}
 
+map.on('click', function (e) {
     if (queryPoints.length > 1) {
         queryPoints = [];
         routingLayer.clearLayers();
     }
 
     L.marker(e.latlng, {icon: iconObject}).addTo(routingLayer);
-    queryPoints.push([e.latlng]);
+    queryPoints.push(e.latlng);
 
 
     if (queryPoints.length > 1) {
@@ -57,31 +60,33 @@ map.on('click', function (e) {
         // get points from ghresponse.getBest().getPoints() (gives you a list of latitude & longitude & elevation)
         // and with 'var elevation=true' you get the bbox from ghresponse.getBest().calculateBBox(BBox.create(elevation))
 
-        var path = {
-            points: [[-104.99404, 39.75621], [-105, 39.9], [-104.9, 39.8]],
-            bbox: [-105, 39.7, -104.9, 39.9],
-            errors: "test"
-        };
-        
-
-        if (path.bbox) {
-            var minLon = path.bbox[0];
-            var minLat = path.bbox[1];
-            var maxLon = path.bbox[2];
-            var maxLat = path.bbox[3];
-            var tmpB = new L.LatLngBounds(new L.LatLng(minLat, minLon), new L.LatLng(maxLat, maxLon));
-            map.fitBounds(tmpB);
-        }
-        routingLayer.addData({
-            "type": "Feature",
-            "geometry": {
+        let val1 = queryPoints[0].lat;
+        let val2 = queryPoints[0].lng;
+        let val3 = queryPoints[1].lat;
+        let val4 = queryPoints[1].lng;
+        messageStatus("calculating route...");
+        cjCall("Main", "runRequest", "/app/cache", val1, val2, val3, val4).then(function(path) {
+            if (path.bbox) {
+                var minLon = path.bbox[0];
+                var minLat = path.bbox[1];
+                var maxLon = path.bbox[2];
+                var maxLat = path.bbox[3];
+                var tmpB = new L.LatLngBounds(new L.LatLng(minLat, minLon), new L.LatLng(maxLat, maxLon));
+                map.fitBounds(tmpB);
+            }
+            routingLayer.addData({
+                "type": "Feature",
+                "geometry": {
                 "type": "LineString",
                 "coordinates": path.points
+                }
+            });
+            if(path.errors) {
+                let errors = String.fromCharCode.apply(null,path.errors.value0).substr(1);
+                messageStatus("path calculation caused errors: " + errors);
+            } else {
+                messageStatus("done!");
             }
         });
-        
-        if(path.errors) {
-            document.getElementById("messages").innerText = "path calculation caused errors: " + path.errors;
-        }
     }
 });
