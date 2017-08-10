@@ -7,4 +7,4 @@ GH.jar: Main.class
 	jar cvf $@ $^
 
 %.jar.js: %.jar
-	/opt/cheerpj/cheerpjfy.py --deps graphhopper-tools-WITH-OSM-0.10-SNAPSHOT-jar-with-dependencies.jar $^
+	/opt/cheerpj/cheerpjfy.py --natives=natives/ --deps graphhopper-tools-WITH-OSM-0.10-SNAPSHOT-jar-with-dependencies.jar $^
