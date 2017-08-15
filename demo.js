@@ -25,6 +25,9 @@ var iconObject = L.icon({
     iconAnchor: [12, 40]
 });
 
+if(location.host === "graphhopper.com")
+    cheerpjSetAppPrefix("public/cheerpj-demo/")
+
 var map = createMap("map");
 // a bit inconsistent: latitude,longitude here but in GeoJSON it is lon,lat:
 map.setView([52.528963, 13.396454], 11);
