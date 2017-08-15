@@ -65,7 +65,7 @@ map.on('click', function (e) {
         let val3 = queryPoints[1].lat;
         let val4 = queryPoints[1].lng;
         messageStatus("calculating route...");
-        cjCall("Main", "runRequest", "/app/cache", val1, val2, val3, val4).then(function(path) {
+        cjCall("Main", "runRequest", "/files/cache", val1, val2, val3, val4).then(function(path) {
             if (path.bbox) {
                 var minLon = path.bbox[0];
                 var minLat = path.bbox[1];

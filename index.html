@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" crossorigin="">
-        <script src="http://cheerpjunstable.leaningtech.com/loader.js"></script>
+        <script src="http://localhost:8090/loader.js"></script>
         <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js" crossorigin=""></script>        
 
         <style>
@@ -27,6 +27,8 @@
 		messageStatus("init cheerpj...");
 		cheerpjInit();
 		cheerpjRunMain("Main","/app/GH.jar:/app/graphhopper-tools-TRIMMED-0.10-SNAPSHOT-jar-with-dependencies.jar")
+			.then(function(){ messageStatus("loading cache..."); });
+		cjCall("Main", "unzip", "/app/cache/berlin.ghz","/files/cache")
 			.then(function(){ messageStatus("done!"); });
 	</script>
     </body>

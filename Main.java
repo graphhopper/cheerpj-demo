@@ -6,6 +6,9 @@ import com.graphhopper.PathWrapper;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.util.shapes.BBox;
+import com.graphhopper.util.Unzipper;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class Main {
@@ -50,18 +53,35 @@ public class Main {
                 + arsp.getTime() + ", points:" + arsp.getPoints().getSize());
         hopper.close();
     }
+    public static void unzip(String source, String dest)
+    {
 
+        File destFile = new File(dest);
+        try {
+            if (!destFile.exists())
+            {
+                new Unzipper().unzip(source, dest, false);
+            }
+        } catch (IOException e) {
+            System.out.println(e.toString());
+        }
+    }
     public static Object runRequest(String graphFolder, float a, float b, float c, float d) {
+        Object path = newJSPath();
         // Using forDesktop avoid mmap requirement
         GraphHopper hopper = new GraphHopper().forDesktop();
         // Do not allow writes to support HTTP directory
         hopper.setAllowWrites(false);
         hopper.setEncodingManager(new EncodingManager(VEHICLE));
-        hopper.load(graphFolder);
+        if (!hopper.load(graphFolder))
+        {
+            setError(path,"failed to load directory");
+            return path;
+        }
+
         GHResponse rsp = hopper.route(new GHRequest(a, b, c, d).
                 setVehicle(VEHICLE));
 
-        Object path = newJSPath();
         if (rsp.hasErrors())
         {
             setError(path,rsp.getErrors().toString());
